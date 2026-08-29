@@ -1,0 +1,108 @@
+case_id,symptom,topology_note,show_outputs,expected_fault,osi_layer,concept,severity
+NS001,PC gets IP but cannot reach server,PC VLAN 30; gateway ping succeeds. Router output shows no route to 10.10.40.0/24.,"show ip route
+C 10.10.30.0/24 is directly connected
+C 10.10.20.0/24 is directly connected",Missing route to server VLAN 40,Layer 3,Routing,High
+NS002,PC cannot get an IP address,Access port is in VLAN 20. DHCP server is on VLAN 10.,"show vlan brief
+20  Users  active
+show interfaces vlan 20
+Vlan20 is up, line protocol is up",Missing DHCP relay/helper on VLAN 20 SVI,Layer 3,DHCP,High
+NS003,Users in VLAN 30 cannot communicate with gateway,Switch access port is assigned to VLAN 20 instead of VLAN 30.,"show vlan brief
+20 Users active
+30 Servers active
+show interfaces fa0/7 switchport
+Access Mode VLAN: 20",Wrong access VLAN on endpoint port,Layer 2,VLAN,High
+NS004,DNS name fails but IP ping works,Client can ping 10.10.10.20 but nslookup fails.,"nslookup server.local
+DNS request timed out
+ipconfig /all
+DNS Servers: 192.168.50.1",Incorrect or unreachable DNS server configured,Layer 7,DNS,Medium
+NS005,Inter-VLAN ping fails,Trunk connects switch to router. VLAN 30 traffic is not carried.,"show interfaces trunk
+Vlans allowed on trunk: 10,20
+show vlan brief
+30 Servers active",VLAN 30 missing from trunk allowed list,Layer 2,VLAN,High
+NS006,Guest Wi-Fi can reach internal server,Guest SSID maps to VLAN 50. ACL should block internal networks.,"show access-lists
+Extended IP access list GUEST-IN
+permit ip any any",Guest isolation ACL is missing/overly permissive,Layer 4,ACL,Critical
+NS007,Only one workstation loses connectivity,NIC is connected but switch interface is administratively down.,"show interfaces fa0/12 status
+Fa0/12 disabled",Interface is administratively down,Layer 1,Interface,High
+NS008,Clients receive 169.254.x.x addresses,"DHCP server is reachable from other VLANs, but client VLAN has no helper.","show run interface vlan 60
+interface Vlan60
+ ip address 10.60.0.1 255.255.255.0",Missing ip helper-address on client VLAN,Layer 3,DHCP,High
+NS009,Server VLAN is unreachable after adding a switch,New switch uplink is configured as access mode.,"show interfaces gi0/1 switchport
+Administrative Mode: static access
+Access Mode VLAN: 10",Uplink should be a trunk but is access mode,Layer 2,VLAN,High
+NS010,Remote network cannot be reached,Static route points to an invalid next hop.,"show ip route 10.70.0.0
+S 10.70.0.0/24 [1/0] via 10.1.1.99
+show ip interface brief
+G0/0 10.1.1.1 up up",Static route next hop is incorrect/unreachable,Layer 3,Routing,High
+NS011,NAT clients cannot access Internet,"Inside interface is configured, outside interface is missing NAT role.","show run interface g0/0
+ip nat inside
+show run interface g0/1
+(no ip nat outside)",NAT outside interface role is missing,Layer 3,NAT,High
+NS012,Port forwarding to web server fails,NAT rule points to wrong inside local address.,"show ip nat translations
+tcp 203.0.113.10:80 10.10.20.50:80",Static NAT maps to wrong server IP,Layer 3,NAT,High
+NS013,DHCP clients get wrong gateway,DHCP pool specifies another network gateway.,"show run | section dhcp
+network 10.20.0.0 255.255.255.0
+default-router 10.10.0.1",DHCP default-router does not match client subnet,Layer 3,DHCP,High
+NS014,Switch management IP is unreachable,SVI is configured but VLAN is not active on the switch.,"show ip interface brief
+Vlan99 10.99.0.2 up down
+show vlan brief
+99 Mgmt active",Management SVI line protocol is down,Layer 2,VLAN,Medium
+NS015,Router interface shows down/down,"Cable is connected in topology, but interface is shut down.","show ip interface brief
+G0/1 unassigned administratively down",Interface is administratively shutdown,Layer 1,Interface,High
+NS016,Users can reach local VLAN but not remote VLAN,Router-on-a-stick subinterface lacks encapsulation for VLAN 20.,"show run interface g0/0.20
+interface G0/0.20
+ ip address 10.20.0.1 255.255.255.0",Missing dot1Q encapsulation,Layer 2,VLAN,High
+NS017,ACL blocks legitimate HTTPS traffic,ACL permits HTTP but not HTTPS.,"show access-lists
+permit tcp any host 10.10.10.10 eq 80
+den y ip any any",HTTPS/443 permit is missing before implicit deny,Layer 4,ACL,High
+NS018,ACL change has no effect,ACL was edited but not applied to interface.,"show run interface g0/0
+(no ip access-group)
+show access-lists
+Extended IP access list EDGE-IN",ACL exists but is not bound to interface,Layer 4,ACL,High
+NS019,Static route exists but packets still fail,Route has correct destination but higher administrative distance than another path.,"show ip route 10.80.0.0
+O 10.80.0.0/24 [110/20]
+S 10.80.0.0/24 [200/0] via 10.1.1.2",Static route loses to lower-distance dynamic route,Layer 3,Routing,Medium
+NS020,Wireless clients connect but get no network access,"SSID is mapped to VLAN 70 but switch trunk allows only VLANs 10,20,30.","show interfaces trunk
+Vlans allowed: 10,20,30
+show vlan brief
+70 Guest active",Wireless VLAN missing from AP uplink trunk,Layer 2,Wireless,High
+NS021,AP management works but clients cannot join,WPA2 key on controller/AP does not match client profile.,"show wireless client summary
+Authentication failure
+show run
+ssid CampusWiFi
+ security wpa2 key mismatch",Incorrect wireless security credentials,Layer 2,Wireless,Medium
+NS022,Duplicate IP causes intermittent connectivity,Two devices use the same static IP in the server VLAN.,"show ip arp 10.10.20.15
+10.10.20.15  aaaa.bbbb.cccc
+10.10.20.15  dddd.eeee.ffff",Duplicate IP address detected,Layer 3,IP Addressing,Critical
+NS023,Host can ping gateway but not server,"Server has wrong subnet mask, placing it outside the intended subnet.","show run interface g0/0
+ip address 10.10.30.20 255.255.255.128
+Expected server subnet: 10.10.30.0/24",Wrong subnet mask on server interface,Layer 3,IP Addressing,High
+NS024,Host has IP but gateway is unreachable,Host default gateway is configured to a nonexistent address.,"ipconfig /all
+IPv4 10.10.40.25
+Mask 255.255.255.0
+Gateway 10.10.40.254
+show ip interface brief
+Vlan40 10.10.40.1 up up",Default gateway mismatch,Layer 3,Gateway,High
+NS025,Trunk comes up but native VLAN warning appears,Both ends use different native VLANs.,"show interfaces trunk
+SW1 native VLAN 99
+SW2 native VLAN 1",Native VLAN mismatch,Layer 2,VLAN,Medium
+NS026,Server is reachable by IP but web app fails,TCP/80 is blocked while ICMP is permitted.,"show access-lists
+permit icmp any host 10.10.10.20
+den y tcp any host 10.10.10.20 eq 80",ACL blocks web application traffic,Layer 4,ACL,High
+NS027,OSPF neighbor is not forming,Interfaces are in different OSPF areas.,"show ip ospf neighbor
+(no neighbors)
+show ip ospf interface g0/0
+Area 0
+show ip ospf interface g0/1
+Area 1",OSPF area mismatch between neighbors,Layer 3,Routing,High
+NS028,DHCP pool is exhausted,All addresses in the pool are leased.,"show ip dhcp pool USERS
+Addresses in pool: 50
+Leased: 50
+Excluded: 0",DHCP address pool exhausted,Layer 3,DHCP,Medium
+NS029,Inter-VLAN routing works but return traffic fails,Server-side default gateway points to an old router.,"show ip interface brief
+Server VLAN gateway: 10.30.0.1
+Server default gateway: 10.30.0.254",Server default gateway is incorrect,Layer 3,Gateway,High
+NS030,NAT overload configured but Internet still fails,ACL used by NAT does not match the inside subnet.,"show run | include ip nat inside source
+ip nat inside source list 10 interface g0/1 overload
+show access-lists 10
+permit 10.20.0.0 0.0.255.255",NAT ACL does not match actual inside subnet,Layer 3,NAT,High

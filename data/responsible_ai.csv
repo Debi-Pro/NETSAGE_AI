@@ -1,0 +1,6 @@
+case_id,initial_ai_answer,review_action,human_correction,reason
+NS001,AI suggested DNS issue,Edited,Routing table shows no route to server subnet; DNS was not the blocker.,Evidence did not support DNS.
+NS006,AI suggested generic connectivity issue,Edited,"Guest ACL permits any-to-any, allowing internal access.",Security boundary required explicit review.
+NS013,AI suggested DHCP server outage,Rejected,DHCP is responding; pool's default-router is wrong.,Configuration evidence contradicted outage hypothesis.
+NS022,AI suggested ARP instability,Edited,Two different MAC addresses answer for the same IP.,Duplicate IP confirmed by ARP evidence.
+NS027,AI suggested interface-down issue,Edited,Both interfaces are up; OSPF areas differ.,Neighbor formation requires matching area configuration.

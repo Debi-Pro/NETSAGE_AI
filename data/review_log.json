@@ -1,0 +1,50 @@
+[
+  {
+    "case_id": "NS001",
+    "action": "Edited",
+    "note": "AI suggested DNS issue; human corrected to routing because the route table had no server route.",
+    "timestamp": "Initial Responsible AI log"
+  },
+  {
+    "case_id": "NS006",
+    "action": "Edited",
+    "note": "Guest ACL was overly permissive; human corrected the diagnosis to guest isolation failure.",
+    "timestamp": "Initial Responsible AI log"
+  },
+  {
+    "case_id": "NS013",
+    "action": "Rejected",
+    "note": "AI suggested DHCP server outage; human rejected it because the pool's default-router was wrong.",
+    "timestamp": "Initial Responsible AI log"
+  },
+  {
+    "case_id": "NS022",
+    "action": "Edited",
+    "note": "AI suggested ARP instability; human corrected it to duplicate IP after two MACs were observed.",
+    "timestamp": "Initial Responsible AI log"
+  },
+  {
+    "case_id": "NS027",
+    "action": "Edited",
+    "note": "AI suggested interface-down; human corrected it to OSPF area mismatch.",
+    "timestamp": "Initial Responsible AI log"
+  },
+  {
+    "case_id": "NS001",
+    "action": "Accepted",
+    "note": "Human accepted the AI recommendation.",
+    "timestamp": "2026-08-29T17:42:23"
+  },
+  {
+    "case_id": "NS001",
+    "action": "Accepted",
+    "note": "its good",
+    "timestamp": "2026-08-29T19:32:35"
+  },
+  {
+    "case_id": "NS001",
+    "action": "Rejected",
+    "note": "its good",
+    "timestamp": "2026-08-29T19:32:44"
+  }
+]

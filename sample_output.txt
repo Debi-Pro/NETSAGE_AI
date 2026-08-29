@@ -1,0 +1,26 @@
+NetSage AI local ML engine — sample
+
+Input: NS022
+Model: TF-IDF + cosine similarity
+Semantic match: 78%
+Matched knowledge case: NS022
+
+AI diagnosis: Duplicate IP address detected
+Concept: IP Addressing
+OSI: Layer 3
+Next command: show ip arp
+
+Retrieved neighbours:
+NS022 · IP Addressing · similarity 0.781
+NS024 · Gateway · similarity 0.412
+NS023 · IP Addressing · similarity 0.398
+
+Independent rule checker:
+FAIL  Duplicate IP detection
+PASS  Gateway consistency
+PASS  Interface state
+PASS  VLAN / trunk consistency
+PASS  Route validation
+PASS  DHCP validation
+
+Human review: REQUIRED

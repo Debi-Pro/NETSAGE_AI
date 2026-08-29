@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NetSage AI — Network Intelligence Console</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="noise"></div>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="brand-mark"><span></span><span></span><span></span></div><div><b>NETSAGE</b><small>AI NETWORK INTELLIGENCE</small></div></div>
+  <div class="status"><i></i><b>LOCAL AI ONLINE</b><span>NO API</span></div>
+  <nav>
+    <button class="nav active" data-view="command">◈ <span>Command Center</span></button>
+    <button class="nav" data-view="workbench">⌁ <span>Evidence Workbench</span></button>
+    <button class="nav" data-view="cases">▦ <span>Case Intelligence</span></button>
+    <button class="nav" data-view="review">✓ <span>Human Review</span></button>
+    <button class="nav" data-view="rai">◌ <span>Responsible AI</span></button>
+    <button class="nav" data-view="architecture">⌬ <span>Architecture</span></button>
+  </nav>
+  <div class="side-foot"><div class="guard"><b>HUMAN GATE ACTIVE</b><p>AI can recommend. Only a reviewer can approve.</p></div><small>NETSAGE // v4.0 // LOCAL MODE</small></div>
+</aside>
+
+<main>
+<header><div><div class="eyebrow">APPLIED AI · NETWORK OPERATIONS</div><h1 id="title">Command Center</h1></div><div class="top-actions"><span class="api">● ZERO API KEYS</span><span id="clock">00:00:00</span></div></header>
+
+<section id="command" class="view">
+  <div class="hero3d">
+    <div class="hero-copy"><div class="eyebrow">INTELLIGENT TROUBLESHOOTING FABRIC</div><h2>See the network.<br><em>Understand the fault.</em></h2><p>Explore a live 3D topology, inject evidence, retrieve similar incidents with local ML, validate the hypothesis, and review the fix.</p><div class="hero-buttons"><button class="primary" onclick="show('workbench')">Open Evidence Workbench <b>→</b></button><button class="ghost" onclick="runDemo()">Run guided demo</button></div><div class="micro"><span>TF-IDF</span><span>Cosine Retrieval</span><span>Rule Validation</span><span>Human Review</span></div></div>
+    <div class="topology-wrap"><canvas id="topology"></canvas><div class="topo-hint">DRAG TO ORBIT · SCROLL TO ZOOM</div><div class="topo-badge"><i></i> LIVE NETWORK</div></div>
+  </div>
+
+  <div class="metric-row" id="stats"></div>
+  <div class="dashboard-grid"><div class="panel"><div class="panel-head"><span>FAULT DISTRIBUTION</span><b>30 SCENARIOS</b></div><div id="concepts"></div></div><div class="panel"><div class="panel-head"><span>DIAGNOSTIC PIPELINE</span><b>LOCAL + EXPLAINABLE</b></div><div class="pipeline"><div class="pipe active"><i>01</i><b>INGEST</b><small>Incident evidence</small></div><div>→</div><div class="pipe active"><i>02</i><b>VECTORIZE</b><small>TF-IDF features</small></div><div>→</div><div class="pipe active"><i>03</i><b>RETRIEVE</b><small>Semantic matches</small></div><div>→</div><div class="pipe active"><i>04</i><b>VALIDATE</b><small>Deterministic checks</small></div><div>→</div><div class="pipe gate"><i>05</i><b>REVIEW</b><small>Human decision</small></div></div></div></div>
+</section>
+
+<section id="workbench" class="view hidden">
+  <div class="section-head"><div><div class="eyebrow">LIVE DIAGNOSTIC SESSION</div><h2>Evidence Workbench</h2><p>Use a supplied scenario or write your own incident. The local ML model works on the evidence you provide.</p></div><span class="badge">AI + RULES + HUMAN</span></div>
+  <div class="work-grid">
+    <div class="panel input-panel">
+      <div class="panel-head"><span>INCIDENT INPUT</span><b>STEP 01 · EVIDENCE</b></div>
+      <label>Load scenario<select id="caseSelect"><option value="">Custom incident</option></select></label>
+      <label>Symptom<textarea id="symptom" rows="3" placeholder="Example: PC gets an IP but cannot reach the server."></textarea></label>
+      <label>Topology note<textarea id="topologyNote" rows="3" placeholder="Devices, VLANs, interfaces, intended path…"></textarea></label>
+      <label>Observed behavior<textarea id="observed" rows="3" placeholder="What exactly failed?"></textarea></label>
+      <label>Cisco / host evidence<textarea id="evidence" rows="10" placeholder="show ip route&#10;show vlan brief&#10;show interfaces trunk&#10;ping ..."></textarea></label>
+      <div class="action-row"><span id="formMsg"></span><button class="primary" onclick="analyzeLive()">✦ Run AI Diagnosis</button></div>
+    </div>
+    <div class="panel session-panel">
+      <div class="panel-head"><span>AI DIAGNOSTIC STREAM</span><b id="modelBadge">STANDBY</b></div>
+      <div id="stream" class="stream"><div class="stream-empty"><div class="orb">AI</div><b>Awaiting evidence</b><span>Run diagnosis to activate the reasoning pipeline.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="cases" class="view hidden">
+  <div class="section-head"><div><div class="eyebrow">LOCAL KNOWLEDGE BASE</div><h2>Case Intelligence</h2><p>30 evidence-rich network fault scenarios.</p></div><span class="badge">30 CASES</span></div>
+  <div class="toolbar"><input id="search" placeholder="⌕ Search symptoms, commands, concepts…"><select id="filter"><option value="">All domains</option></select></div>
+  <div id="caseGrid" class="case-grid"></div>
+</section>
+
+<section id="review" class="view hidden">
+  <div class="section-head"><div><div class="eyebrow">MANDATORY HUMAN OVERSIGHT</div><h2>Review Console</h2><p>AI recommendations remain advisory until reviewed.</p></div><span class="badge yellow">DECISION REQUIRED</span></div>
+  <div id="reviewBox" class="panel review-box"><div class="empty">Run a diagnosis from the Evidence Workbench first.</div></div>
+</section>
+
+<section id="rai" class="view hidden">
+  <div class="section-head"><div><div class="eyebrow">MODEL GOVERNANCE</div><h2>Responsible AI</h2><p>We show where the system can be wrong — and how humans correct it.</p></div><span class="badge green">5 CORRECTIONS</span></div>
+  <div class="rai-banner"><div class="rai-icon">AI</div><div><b>Advisory intelligence, accountable operators.</b><p>Five documented correction cases are included in the submission. No diagnosis can silently become a network change.</p></div></div>
+  <div class="panel"><div class="panel-head"><span>HUMAN CORRECTION LOG</span><b>AUDIT TRAIL</b></div><div id="raiTable"></div></div>
+</section>
+
+<section id="architecture" class="view hidden">
+  <div class="section-head"><div><div class="eyebrow">UNDER THE HOOD</div><h2>Architecture</h2><p>Everything runs locally — no hosted model or API credential required.</p></div><span class="badge">OFFLINE-CAPABLE</span></div>
+  <div class="arch-flow">
+    <div class="arch-card"><small>01</small><b>NETWORK EVIDENCE</b><p>Symptoms, topology and real Cisco/host command output.</p></div><div class="arrow">↓</div>
+    <div class="arch-card cyan"><small>02</small><b>LOCAL NLP ENGINE</b><p>TF-IDF feature extraction + cosine similarity retrieves the closest troubleshooting cases.</p></div><div class="arrow">↓</div>
+    <div class="arch-card"><small>03</small><b>EXPLAINABLE DIAGNOSIS</b><p>Root cause, confidence, evidence, next command and safe remediation plan.</p></div><div class="arrow">↓</div>
+    <div class="arch-card green"><small>04</small><b>DETERMINISTIC VALIDATION</b><p>Independent checks for routes, VLANs, DHCP, interfaces, gateway and duplicate IP signals.</p></div><div class="arrow">↓</div>
+    <div class="arch-card yellow"><small>05</small><b>HUMAN REVIEW GATE</b><p>Accept, Edit or Reject. The system never modifies Packet Tracer configurations automatically.</p></div>
+  </div>
+</section>
+</main></div>
+<script src="/static/app.js"></script>
+</body></html>
